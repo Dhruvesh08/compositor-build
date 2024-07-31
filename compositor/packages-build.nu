@@ -101,8 +101,8 @@ def build_custom_package [package] {
     # Move into the extracted directory
     cd $package_dir
 
-    # Copy the debian directory into the package
-    let debian_source_dir = $initial_dir | path expand
+    # move the debian directory into the package
+    let debian_source_dir = $package.package_config_dir | path expand
     if ($debian_source_dir | path exists) {
         echo $"Copying debian directory from ($debian_source_dir)"
         mv  $debian_source_dir .
