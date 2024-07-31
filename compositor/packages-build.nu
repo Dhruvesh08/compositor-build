@@ -99,9 +99,10 @@ def build_custom_package [package] {
         wget $source_url -O $orig_tarball
     }
 
-    # Extract the tarball if the directory doesn't exist
+    # Extract the tarball into the package_dir
     if not ($package_dir | path exists) {
-        tar -xvf $orig_tarball
+        mkdir $package_dir
+        tar -xvf $orig_tarball -C $package_dir --strip-components=1
     }
 
     # Move into the extracted directory
