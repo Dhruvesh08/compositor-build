@@ -19,8 +19,6 @@ def install_packages_in_directory [dir: string, package_name: string] {
         }
         print "Finished attempting to install all packages."
 
-        # Copy .deb files to assets directory
-        collect_artifacts $package_name (realpath $dir)
     } else {
         print "No .deb files found to install."
     }
@@ -74,6 +72,10 @@ def build_standard_package [package] {
 
     cd ..
     install_packages_in_directory (pwd) $package.name
+    
+    # Copy .deb files to assets directory
+    collect_artifacts $package.name (pwd)
+
 
     cd ..
 
@@ -137,6 +139,9 @@ def build_custom_package [package] {
 
     # Install the built packages
     install_packages_in_directory (pwd) $package.name
+
+    # Copy .deb files to assets directory
+    collect_artifacts $package.name (pwd)
 
     # Return to the script directory
     cd $source_dir

@@ -23,13 +23,9 @@ export def collect_artifacts [package_name: string, source_dir: string] {
     let deb_files = (ls $abs_source_dir | where name =~ '\.deb$' | get name)
     if ($deb_files | length) > 0 {
         for file in $deb_files {
-            let file_path = $"($abs_source_dir)/($file)"
-            if ($file_path | path exists) {
-                cp $file_path $package_assets_dir
+                cp $deb_files $package_assets_dir
                 print $"Copied ($file) to ($package_assets_dir)"
-            } else {
-                print $"File not found: ($file_path)"
-            }
+         
         }
     } else {
         print $"No .deb files found in ($abs_source_dir)"
