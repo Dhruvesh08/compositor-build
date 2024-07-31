@@ -52,7 +52,7 @@ def build_standard_package [package] {
     # Change to the inner directory
     cd $inner_dir_name
     if (pwd | path exists) {
-        print "Changed to directory: $inner_dir_name"
+        print $"Changed to directory: ($inner_dir_name)"
     } else {
         print $"Error: Directory ($inner_dir_name) does not exist."
         return 1
