@@ -7,7 +7,7 @@ on:
       - dev*
     paths:
     - debian/packages/**
-    - .github/workflows/compositor.yml
+    - .github/workflows/packages.yml
 
 
 jobs:
@@ -29,7 +29,7 @@ jobs:
 
       - name: Debug - List contents of debian directory
         run: |
-          ls -R compositor
+          ls -R packages
 
       - name: Build Docker image
         uses: docker/build-push-action@v5
@@ -38,45 +38,42 @@ jobs:
           file: Dockerfile
           push: false
           load: true
-          tags: mechasystems/compositor:latest
+          tags: mechasystems/packages:latest
 
       - name: Debug - List Docker images
         run: docker images
 
       - name: Debug - Show Docker image details
-        run: docker inspect mechasystems/compositor:latest
+        run: docker inspect mechasystems/packages:latest
 
       - name: Remove existing container if it exists
         run: |
-          docker rm -f compositor-container || true
+          docker rm -f packages-container || true
 
       - name: Run Docker container and collect artifacts
         run: |
-          docker run --name compositor-container mechasystems/compositor:latest
+          docker run --name packages-container mechasystems/packages:latest
           docker ps -a
+          docker logs packages-container
+          docker cp packages-container:/artifacts ./artifacts || echo "Failed to copy artifacts"
 
+      - name: Debug - List container filesystem
+        if: failure()
+        run: |
+          docker exec packages-container ls -R /
 
+      - name: list artifacts
+        run: |
+          ls -R ./artifacts || echo "No artifacts found"
 
-      #     docker logs compositor-container
-      #     docker cp compositor-container:/artifacts ./artifacts || echo "Failed to copy artifacts"
+      - name: Clean up
+        if: always()
+        run: |
+          docker stop packages-container || true
+          docker rm packages-container || true
 
-      # - name: Debug - List container filesystem
-      #   if: failure()
-      #   run: |
-      #     docker exec compositor-container ls -R /
-
-      # - name: list artifacts
-      #   run: |
-      #     ls -R ./artifacts || echo "No artifacts found"
-
-      # - name: Clean up
-      #   if: always()
-      #   run: |
-      #     docker stop compositor-container || true
-      #     docker rm compositor-container || true
-
-      # - name: Upload artifacts
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: easysplash-swrender-artifacts
-      #     path: ./artifacts/*    
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: packages
+          path: ./artifacts/*    
