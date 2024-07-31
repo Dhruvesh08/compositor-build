@@ -20,7 +20,7 @@ def install_packages_in_directory [dir: string, package_name: string] {
         print "Finished attempting to install all packages."
 
      # Copy .deb files to assets directory
-     collect_artifacts $package_name $dir
+     collect-package collect_artifacts $package_name $dir
      
     } else {
         print "No .deb files found to install."
