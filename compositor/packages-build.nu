@@ -76,48 +76,59 @@ def build_standard_package [package] {
     return 0
 }
 
-
 def build_custom_package [package] {
     let package_name = $package.name
     let source_url = $package.url
     let branch = $package.branch
     let version = $package.version
+    let initial_dir = (pwd)
 
     print $"Building package ($package_name) ($version) from ($source_url) on branch ($branch)"
 
     let orig_tarball = $"($package_name)_($version).orig.tar.gz"
     let package_dir = $"($package_name)-($version)"
 
-    mkdri $package_name
+    # Create and enter the package directory
+    mkdir $package_name
     cd $package_name
 
+    # Download the source
     wget $source_url -O $orig_tarball
-    mkdir $package_dir
-    tar -xvf $orig_tarball -C $package_dir --strip-components=1
+
+    # Extract the tarball
+    tar -xvf $orig_tarball
+
+    # Move into the extracted directory
+    cd $package_dir
 
     # Copy the debian directory into the package
-    let debian_source_dir = (pwd | path dirname | path dirname | path join $package.package_config_dir)
+    let debian_source_dir = ($initial_dir | path join $package.package_config_dir)
     if ($debian_source_dir | path exists) {
-        cp -r $debian_source_dir debian
-        print $"Copied debian files from ($debian_source_dir)"
+        cp -r $debian_source_dir .
+        print $"Copied debian directory from ($debian_source_dir)"
     } else {
         print $"Error: Debian source directory ($debian_source_dir) not found"
-        cd ../..
+        cd $initial_dir
         return 1
     }
-  
 
-    cd $package_dir
+    # Move back one directory to build the package
+    cd ..
+
+    # Build the package
     if (debuild -us -uc | complete).exit_code != 0 {
         print $"Error building package ($package_name)"
+        cd $initial_dir
         return 1
     }
 
-    cd ..
+    # Install the built packages
     install_packages_in_directory (pwd)
 
-    cd ..
-    print $"Package ($package_name) built successfully"
+    # Return to the initial directory
+    cd $initial_dir
+
+    print $"Package ($package_name) built and installed successfully"
     return 0
 }
 
