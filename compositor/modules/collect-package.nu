@@ -1,8 +1,9 @@
 #!/usr/bin/env nu
 
 export def collect_artifacts [package_name: string, source_dir: string] {
-    let assets_dir = "assets"
-    let package_assets_dir = $"($assets_dir)/($package_name)"
+    let current_dir = (pwd)
+    let assets_dir = ($current_dir | path join "assets")
+    let package_assets_dir = ($assets_dir | path join $package_name)
     
     # Create assets directory if it doesn't exist
     if not ($assets_dir | path exists) {

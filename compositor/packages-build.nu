@@ -11,7 +11,7 @@ def install_packages_in_directory [dir: string, package_name: string] {
     if ($deb_files | length) > 0 {
         for file in $deb_files {
             print $"Installing package: ($file)"
-            if (dpkg -i $file | complete).exit_code != 0 {
+            if (dpkg -i $"($dir)/($file)" | complete).exit_code != 0 {
                 print $"Error installing package ($file). Skipping dependency resolution."
             } else {
                 print $"Successfully installed package: ($file)"
@@ -19,9 +19,8 @@ def install_packages_in_directory [dir: string, package_name: string] {
         }
         print "Finished attempting to install all packages."
 
-     # Copy .deb files to assets directory
-     collect_artifacts $package_name $dir
-     
+        # Copy .deb files to assets directory
+        collect_artifacts $package_name $dir
     } else {
         print "No .deb files found to install."
     }
