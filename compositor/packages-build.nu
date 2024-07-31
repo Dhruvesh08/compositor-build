@@ -102,9 +102,10 @@ def build_custom_package [package] {
     cd $package_dir
 
     # Copy the debian directory into the package
-    let debian_source_dir = ($initial_dir | path join $package.package_config_dir)
+    let debian_source_dir = $initial_dir | path expand
     if ($debian_source_dir | path exists) {
-        cp -r $debian_source_dir .
+        echo $"Copying debian directory from ($debian_source_dir)"
+        mv  $debian_source_dir .
         print $"Copied debian directory from ($debian_source_dir)"
     } else {
         print $"Error: Debian source directory ($debian_source_dir) not found"
