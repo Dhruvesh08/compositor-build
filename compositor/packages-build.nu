@@ -79,11 +79,11 @@ def build_standard_package [package] {
 def build_custom_package [package] {
     let package_name = $package.name
     let source_url = $package.url
-    let branch = $package.branch
+
     let version = $package.version
     let source_dir = (pwd)
 
-    print $"Building package ($package_name) ($version) from ($source_url) on branch ($branch)"
+    print $"Building package ($package_name) ($version) from ($source_url)"
 
     let orig_tarball = $"($package_name)_($version).orig.tar.gz"
     let package_dir = $"($package_name)-($version)"
