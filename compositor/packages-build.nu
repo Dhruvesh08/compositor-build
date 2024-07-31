@@ -1,6 +1,6 @@
 #!/usr/bin/env nu
 
-use collect-package.nu
+use modules/collect-package.nu
 
 def read_config [] {
     open config.yml
