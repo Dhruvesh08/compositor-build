@@ -81,53 +81,59 @@ def build_custom_package [package] {
     let source_url = $package.url
     let branch = $package.branch
     let version = $package.version
-    let initial_dir = (pwd)
+    let source_dir = (pwd)
 
     print $"Building package ($package_name) ($version) from ($source_url) on branch ($branch)"
 
     let orig_tarball = $"($package_name)_($version).orig.tar.gz"
     let package_dir = $"($package_name)-($version)"
 
-    # Create and enter the package directory
-    mkdir $package_name
+    # Create and enter the package directory if it doesn't exist
+    if not ($package_name | path exists) {
+        mkdir $package_name
+    }
     cd $package_name
 
-    # Download the source
-    wget $source_url -O $orig_tarball
+    # Download the source if it doesn't exist
+    if not ($orig_tarball | path exists) {
+        wget $source_url -O $orig_tarball
+    }
 
-    # Extract the tarball
-    tar -xvf $orig_tarball
+    # Extract the tarball if the directory doesn't exist
+    if not ($package_dir | path exists) {
+        tar -xvf $orig_tarball
+    }
 
     # Move into the extracted directory
     cd $package_dir
 
-    # move the debian directory into the package
-    let debian_source_dir = $package.package_config_dir | path expand
+    # Move the debian directory into the package
+    let debian_source_dir = ($source_dir | path join $package.package_config_dir)
     if ($debian_source_dir | path exists) {
-        echo $"Copying debian directory from ($debian_source_dir)"
-        mv  $debian_source_dir .
+        echo $"Moving debian directory from ($debian_source_dir)"
+        cp -r $debian_source_dir debian
         print $"Copied debian directory from ($debian_source_dir)"
     } else {
         print $"Error: Debian source directory ($debian_source_dir) not found"
-        cd $initial_dir
+        cd $source_dir
         return 1
     }
-
-    # Move back one directory to build the package
-    cd ..
 
     # Build the package
     if (debuild -us -uc | complete).exit_code != 0 {
         print $"Error building package ($package_name)"
-        cd $initial_dir
+        cd $source_dir
         return 1
     }
+
+    # Move back to the package directory
+    cd ..
 
     # Install the built packages
     install_packages_in_directory (pwd)
 
-    # Return to the initial directory
-    cd $initial_dir
+    # Return to the script directory
+    cd $source_dir
 
     print $"Package ($package_name) built and installed successfully"
     return 0
