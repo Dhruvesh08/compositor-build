@@ -111,8 +111,8 @@ def build_custom_package [package] {
     let debian_source_dir = ($source_dir | path join $package.package_config_dir)
     if ($debian_source_dir | path exists) {
         echo $"Moving debian directory from ($debian_source_dir)"
-        cp -r $debian_source_dir debian
-        print $"Copied debian directory from ($debian_source_dir)"
+        mv $debian_source_dir debian
+        print $"Moved debian directory from ($debian_source_dir)"
     } else {
         print $"Error: Debian source directory ($debian_source_dir) not found"
         cd $source_dir
