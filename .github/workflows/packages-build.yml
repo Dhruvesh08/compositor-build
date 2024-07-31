@@ -1,4 +1,4 @@
-name: Compositer Build
+name: Packages Build
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
       - dev*
     paths:
     - debian/packages/**
-    - .github/workflows/packages.yml
+    - .github/workflows/packages-build.yml
 
 
 jobs:
