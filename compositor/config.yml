@@ -1,0 +1,20 @@
+packages:
+  - name: wayland
+    version: 1.22.0-2.1
+    url: http://deb.debian.org/debian/pool/main/w/wayland/wayland_1.22.0-2.1.dsc
+  - name: wayland-protocols
+    version: 1.36
+    url: http://deb.debian.org/debian/pool/main/w/wayland-protocols/wayland-protocols_1.36-1.dsc 
+  - name: dpkg
+    version: 1.22.8
+    url: https://deb.debian.org/debian/pool/main/d/dpkg/dpkg_1.22.8.dsc
+  - name: libliftoff
+    version: 0.4.1-1
+    url: http://deb.debian.org/debian/pool/main/libl/libliftoff/libliftoff_0.4.1-1.dsc 
+  - name: libdisplay-info
+    version: 0.1.1-2
+    url:  http://deb.debian.org/debian/pool/main/libd/libdisplay-info/libdisplay-info_0.1.1-2.dsc
+  - name: wlroots
+    version: 0.17.4-1
+    url: http://deb.debian.org/debian/pool/main/w/wlroots/wlroots_0.17.4-1.dsc 
+  # Add more packages as needed

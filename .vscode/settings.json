@@ -1,0 +1,11 @@
+{
+    "emeraldwalk.runonsave": {
+        "commands": [
+            {
+                "match": "\\.nu$",
+                "isAsync": true,
+                "cmd": "${workspaceFolder}/nu_formatter.sh ${file}"
+            }
+        ]
+    }
+}
