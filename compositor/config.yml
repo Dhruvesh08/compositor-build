@@ -26,7 +26,13 @@ packages:
   - name: labwc
     version: 0.7.3
     url: https://github.com/labwc/labwc/archive/refs/tags/0.7.3.tar.gz
-    branch: main
     build_type: custom  
-    package_config_dir: ./labwc/debian
+    package_config_dir: labwc/debian
+  - name: "easysplash-swrender"
+    version: "1.0"
+    git_url: "https://github.com/texierp/easysplash/archive/refs/heads/master.tar.gz"
+    branch: "master"
+    version: "1.0"
+    build_type: custom  
+    package_config_dir: easy-splash-swrender/debian
   # Add more packages as needed
