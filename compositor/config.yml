@@ -25,8 +25,8 @@ packages:
     build_type: standard
   - name: labwc
     version: 0.7.3
-    git_url: https://github.com/labwc/labwc
+    url: https://github.com/labwc/labwc/archive/refs/tags/0.7.3.tar.gz
     branch: main
     build_type: custom  
-    package_config_dir: ./labwc/debain
+    package_config_dir: ./labwc/debian
   # Add more packages as needed
