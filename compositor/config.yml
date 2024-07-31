@@ -31,8 +31,6 @@ packages:
   - name: "easysplash-swrender"
     version: "1.0"
     git_url: "https://github.com/texierp/easysplash/archive/refs/heads/master.tar.gz"
-    branch: "master"
-    version: "1.0"
     build_type: custom  
     package_config_dir: easy-splash-swrender/debian
   # Add more packages as needed
