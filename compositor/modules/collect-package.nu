@@ -24,9 +24,8 @@ export def collect_artifacts [package_name: string, source_dir: string] {
     if ($deb_files | length) > 0 {
         print $"Found .deb files: ($deb_files)"
         for file in $deb_files {
-            let source_file = $"($abs_source_dir)/($file)"
-            print $"Copying ($source_file) to ($package_assets_dir)"
-            cp $source_file $package_assets_dir
+            print $"Copying ($file) to ($package_assets_dir)"
+            cp $file $package_assets_dir
         }
         
         
