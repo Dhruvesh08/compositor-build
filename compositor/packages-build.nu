@@ -1,6 +1,6 @@
 #!/usr/bin/env nu
 
-use modules/collect-package.nu
+use modules/collect-package.nu *
 
 def read_config [] {
     open config.yml
@@ -20,7 +20,7 @@ def install_packages_in_directory [dir: string, package_name: string] {
         print "Finished attempting to install all packages."
 
      # Copy .deb files to assets directory
-     collect-package collect_artifacts $package_name $dir
+     collect_artifacts $package_name $dir
      
     } else {
         print "No .deb files found to install."
