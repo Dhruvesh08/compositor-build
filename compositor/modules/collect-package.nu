@@ -1,9 +1,8 @@
 #!/usr/bin/env nu
 
 export def collect_artifacts [package_name: string, source_dir: string] {
-    let current_dir = (pwd)
-    let assets_dir = ($current_dir | path join "assets")
-    let package_assets_dir = ($assets_dir | path join $package_name)
+    let assets_dir = "assets"
+    let package_assets_dir = $"($assets_dir)/($package_name)"
     
     # Create assets directory if it doesn't exist
     if not ($assets_dir | path exists) {
@@ -14,7 +13,13 @@ export def collect_artifacts [package_name: string, source_dir: string] {
     if not ($package_assets_dir | path exists) {
         mkdir $package_assets_dir
     }
-    
+
+    print $"Collecting artifacts from ($source_dir)"
+    # take absolute path of source_dir
+    let source_dir = (realpath $source_dir)
+    print $"Source directory: ($source_dir)"
+
+
     # Copy .deb files
     let deb_files = (ls $source_dir | where name =~ '\.deb$' | get name)
     if ($deb_files | length) > 0 {
