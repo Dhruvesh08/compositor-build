@@ -36,6 +36,7 @@ jobs:
         with:
           context: .
           file: Dockerfile
+          platforms: linux/arm64
           push: false
           load: true
           tags: mechasystems/packages:latest
@@ -52,7 +53,7 @@ jobs:
 
       - name: Run Docker container and collect artifacts
         run: |
-          docker run --name packages-container mechasystems/packages:latest
+          docker run --platform linux/arm64 --name packages-container mechasystems/packages:latest
           docker ps -a
           docker logs packages-container
           docker cp packages-container:/artifacts ./artifacts || echo "Failed to copy artifacts"

@@ -12,9 +12,9 @@ def install_packages_in_directory [dir: string] {
         for file in $deb_files {
             print $"Installing package: ($file)"
             if (dpkg -i $file | complete).exit_code != 0 {
-                print $"Error installing package ($file). Skipping dependency resolution."
+                print $"(ansi red)\(ERROR\): (ansi red)\(ERROR\): Error  installing package ($file). Skipping dependency resolution."
             } else {
-                print $"Successfully installed package: ($file)"
+                print $"(ansi blue)\(INFO\):Successfully installed package: ($file)"
             }
         }
         print "Finished attempting to install all packages."
@@ -56,14 +56,14 @@ def build_standard_package [package] {
     if (pwd | path exists) {
         print $"Changed to directory: ($inner_dir_name)"
     } else {
-        print $"Error: Directory ($inner_dir_name) does not exist."
+        print $"(ansi red)\(ERROR\): Error Directory ($inner_dir_name) does not exist."
         return 1
     }
 
 
     # Build the package
     if (debuild -us -uc | complete).exit_code != 0 {
-        print $"Error building package ($package.name)"
+        print $"(ansi red)\(ERROR\): Error  building package ($package.name)"
         return 1
     }
 
@@ -121,14 +121,14 @@ def build_custom_package [package] {
         mv $debian_source_dir debian
         print $"Moved debian directory from ($debian_source_dir)"
     } else {
-        print $"Error: Debian source directory ($debian_source_dir) not found"
+        print $"(ansi red)\(ERROR\): Error Debian source directory ($debian_source_dir) not found"
         cd $source_dir
         return 1
     }
 
     # Build the package
     if (debuild -us -uc | complete).exit_code != 0 {
-        print $"Error building package ($package_name)"
+        print $"(ansi red)\(ERROR\): Error building package ($package_name)"
         cd $source_dir
         return 1
     }
