@@ -7,22 +7,30 @@ def read_config [] {
 }
 
 def install_packages_in_directory [dir: string] {
-    let deb_files = (ls $dir | where name =~ '\.deb$' | get name)
-    if ($deb_files | length) > 0 {
-        for file in $deb_files {
-            print $"Installing package: ($file)"
-            if (dpkg -i $file | complete).exit_code != 0 {
-                print $"(ansi red)\(ERROR\): (ansi red)\(ERROR\): Error  installing package ($file). Skipping dependency resolution."
+    print $"Installing packages in directory: ($dir)"
+    cd $dir
+    if (ls *.deb | length) > 0 {
+        print "Installing all .deb packages..."
+        let result = (run-external "sh" "-c" "dpkg -i *.deb" | complete)
+        if $result.exit_code != 0 {
+            print $"(ansi yellow)Error installing packages: ($result.stderr)"
+            print "Attempting to resolve dependencies..."
+            let apt_result = (run-external "apt-get" "install" "-f" "-y" | complete)
+            if $apt_result.exit_code != 0 {
+                print $"(ansi red)Failed to resolve dependencies: ($apt_result.stderr)"
             } else {
-                print $"(ansi blue)\(INFO\):Successfully installed package: ($file)"
+                print $"(ansi green)Successfully resolved dependencies."
             }
+        } else {
+            print $"(ansi green)Successfully installed all packages."
         }
-        print "Finished attempting to install all packages."
     } else {
         print "No .deb files found to install."
     }
+    cd ..
     return 0
 }
+
 
 def build_standard_package [package] {
     let base_version = ($package.version | split row "-" | first)
